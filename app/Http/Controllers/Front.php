@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Brand;
 use App\Category;
 use App\Product;
-use Illuminate\Http\Request;
+use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Facades\Request;
 
 class Front extends Controller
 {
@@ -71,7 +72,16 @@ class Front extends Controller
     }
 
     public function cart() {
-        return view('cart', array('title' => 'Welcome','description' => '','page' => 'home'));
+        //update/ add new item to cart
+        if (Request::isMethod('post')) {
+            $product_id = Request::get('product_id');
+            $product = Product::find($product_id);
+            Cart::add(array('id' => $product_id, 'name' => $product->name, 'qty' => 1, 'price' => $product->price));
+        }
+
+        $cart = Cart::content();
+
+        return view('cart', array('cart' => $cart, 'title' => 'Welcome','description' => '','page' => 'home'));
     }
 
     public function checkout() {

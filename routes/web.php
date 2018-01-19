@@ -24,3 +24,5 @@ Route::get('/logout','Front@logout');
 Route::get('/cart','Front@cart');
 Route::get('/checkout','Front@checkout');
 Route::get('/search/{query}','Front@search');
+
+Route::post('/cart', 'Front@cart');
