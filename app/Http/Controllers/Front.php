@@ -79,6 +79,32 @@ class Front extends Controller
             Cart::add(array('id' => $product_id, 'name' => $product->name, 'qty' => 1, 'price' => $product->price));
         }
 
+        //increment the quantity
+        if (Request::get('product_id') && (Request::get('increment')) == 1) {
+
+            $item = Cart::search(function ($cartItem, $rowId) {
+                return $cartItem->id === Request::get('product_id');
+            });
+            foreach($item as $id => $ite) {
+                $item = $ite;
+            }
+
+            Cart::update($item->rowId, $item->qty + 1);
+        }
+
+        //decrease the quantity
+        if (Request::get('product_id') && (Request::get('decrease')) == 1) {
+
+            $item = Cart::search(function ($cartItem, $rowId) {
+                return $cartItem->id === Request::get('product_id');
+            });
+            foreach($item as $id => $ite) {
+                $item = $ite;
+            }
+
+            Cart::update($item->rowId, $item->qty - 1);
+        }
+
         $cart = Cart::content();
 
         return view('cart', array('cart' => $cart, 'title' => 'Welcome','description' => '','page' => 'home'));
